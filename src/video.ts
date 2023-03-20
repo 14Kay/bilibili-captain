@@ -136,7 +136,7 @@ export class Video {
      * @param like 同时点赞
      * @returns 如果已经点赞则会点赞失败
      */
-    async coin(multiply: 2, like: true, bvid?: string): Promise<boolean> {
+    async coin(multiply: 2, like: 0 | 1 = 1, bvid?: string): Promise<boolean> {
         bvid = bvid || this.bvid;
         if (!bvid) throw new BiliCaptainError("需要提供bvid");
         return Request.post(
