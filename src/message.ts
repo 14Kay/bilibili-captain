@@ -7,6 +7,7 @@ import {
     LikeResp, MessageFromResp,
     MsgBoxResp, ReplyMsgResp, SendMsgResp, SysMsgResp,
     UnreadMsgFeedResp, UnreadPrivateMsgCountResp,
+    AtMsgResp
 } from "./types/message";
 
 /**
@@ -62,6 +63,23 @@ export class Message {
             "https://api.bilibili.com/x/msgfeed/reply",
             {
                 platform: "web",
+                build: 0,
+                mobi_app: "web",
+            },
+            this.credential,
+        ).then(res => {
+            return res.data;
+        });
+    }
+
+    /**
+     * AT我的
+     * @returns
+     */
+    async at(): Promise<AtMsgResp> {
+        return Request.get(
+            "https://api.bilibili.com/x/msgfeed/at",
+            {
                 build: 0,
                 mobi_app: "web",
             },
@@ -249,6 +267,44 @@ export class Message {
                 else throw err;
             });
     }
+
+    /**
+     * 回复AT
+     * @param receiverId 收件人uid
+     * @param content 私信内容，发送图片时需要序列化
+     * @param msgType 根据内容而定，文本=1，图片=2，撤回=5
+     * @returns
+     */
+    async replayAt(oid: number, root: number, message: string): Promise<any> {
+        if (!oid) throw new BiliCaptainError("需要提供回复的消息ID");
+        if (!root) throw new BiliCaptainError("需要提供回复的rootId");
+        if (!message) throw new BiliCaptainError("需要提供回复的消息内容");
+        const data: any = {
+            type: 1,
+            message: message,
+            oid: oid,
+            root: root,
+            jsonp: "jsonp",
+            scene: "msg",
+            plat: 1,
+            from: "im-reply",
+            build: 0,
+            parent: root,
+            csrf_token: this.credential.csfr,
+            csrf: this.credential.csfr,
+            mobi_app: "web"
+        }
+        const qStr: string = Object.keys(data).map((v: string) => `${v}=${encodeURI(data[v])}`).join('&')
+        return Request.post(
+            "https://api.bilibili.com/x/v2/reply/add",
+            qStr,
+            this.credential,
+        )
+            .then(res => {
+                return res.data;
+            })
+    }
+
 
     /**
      * 撤回私信

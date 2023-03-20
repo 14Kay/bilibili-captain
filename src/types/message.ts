@@ -31,6 +31,14 @@ export interface ReplyMsgResp {
     last_view_at: number;
 }
 
+export interface AtMsgResp {
+    cursor:       Cursor;
+    items:        ItemElement[];
+    code:         number;
+    message:      string;
+    ttl:          number;
+}
+
 interface Cursor {
     is_end: boolean;
     id:     number;
