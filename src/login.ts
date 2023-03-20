@@ -3,7 +3,7 @@ import * as qrcode from "qrcode";
 import { Request } from "./request";
 import { BiliCredential } from "./biliCredential";
 import { GetLoginInfoFailResp, GetLoginInfoSuccResp, GetQRResp } from "./types/login";
-
+import { BiliCaptainError } from "./error"
 /**
  * 登录
  */

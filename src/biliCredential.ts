@@ -1,6 +1,6 @@
 import { User } from "./user";
 import { UserInfo } from "./types/user";
-
+import { BiliCaptainError } from "./error"
 /**
  * 保存各种凭据
  */
